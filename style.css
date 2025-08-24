@@ -9,10 +9,10 @@
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     --font-family: 'Noto Sans KR', sans-serif;
 
-    --weight-easy: #a8d8b9;
-    --weight-medium: #82cae4;
-    --weight-hard: #ffc658;
-    --weight-expert: #ff8042;
+    --weight-easy: #67ba81;
+    --weight-medium: #57b1d2;
+    --weight-hard: #edaf35;
+    --weight-expert: #ed5638;
 }
 
 body {
@@ -147,9 +147,9 @@ td.long-name { font-size: 0.9em; }
 .year, .weight, .rating, .players { text-align: center; width: 10%; }
 
 .weight-badge { display: inline-block; padding: 0.3rem 0.75rem; border-radius: 15px; font-weight: 500; color: var(--text-color); font-size: 0.85em; }
-.weight-easy { background-color: var(--weight-easy); }
-.weight-medium { background-color: var(--weight-medium); }
-.weight-hard { background-color: var(--weight-hard); }
+.weight-easy { background-color: var(--weight-easy); color: white; }
+.weight-medium { background-color: var(--weight-medium); color: white; }
+.weight-hard { background-color: var(--weight-hard); color: white; }
 .weight-expert { background-color: var(--weight-expert); color: white; }
 
 .pagination { display: flex; justify-content: center; align-items: center; margin-top: 2rem; }
