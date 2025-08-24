@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>보드게임 순위</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="page-wrapper">
+        <header class="page-header">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><path fill="currentColor" d="M224 128a96 96 0 1 1-96-96a96 96 0 0 1 96 96m-96-48a48 48 0 1 0 48 48a48.05 48.05 0 0 0-48-48m0 64a16 16 0 1 1 16-16a16 16 0 0 1-16 16"/></svg>
+                <h1>보드게임 순위</h1>
+            </div>
+        </header>
+
+        <main class="container">
+            <div class="filters-card">
+                <div class="filters">
+                    <div class="filter-item">
+                        <label for="date-select">데이터 날짜</label>
+                        <select id="date-select"></select>
+                    </div>
+                    <div class="filter-item">
+                        <label for="year-select">출시 연도</label>
+                        <select id="year-select">
+                            <option value="all">전체</option>
+                            <option value="3">최근 3년</option>
+                            <option value="5">최근 5년</option>
+                            <option value="10">최근 10년</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label for="players-select">게임 인원</label>
+                        <select id="players-select">
+                            <option value="all">전체</option>
+                            <option value="1">1인</option>
+                            <option value="2">2인</option>
+                            <option value="3">3인</option>
+                            <option value="4">4인</option>
+                            <option value="5">5인</option>
+                            <option value="6">6인</option>
+                            <option value="7">7인</option>
+                            <option value="8">8인</option>
+                            <option value="9">9인</option>
+                            <option value="10">10인 이상</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label for="weight-select">게임 난이도</label>
+                        <select id="weight-select">
+                            <option value="all">전체</option>
+                            <option value="1-2">1.0 ~ 2.0</option>
+                            <option value="2-3">2.0 ~ 3.0</option>
+                            <option value="3-4">3.0 ~ 4.0</option>
+                            <option value="4-5">4.0 ~ 5.0</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label for="rank-type-select">순위 기준</label>
+                        <select id="rank-type-select">
+                            <option value="original">기존 순위</option>
+                            <option value="new">난이도 보정 순위</option>
+                        </select>
+                    </div>
+                    <div class="filter-item search-container">
+                        <label for="search-input">게임 이름 검색</label>
+                        <div class="search-wrapper">
+                            <input type="text" id="search-input" placeholder="게임 이름...">
+                            <button id="search-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="boardgame-table">
+                    <thead>
+                        <tr id="table-header"></tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+
+            <div class="pagination" id="pagination"></div>
+        </main>
+    </div>
+
+    <script src="lib/papaparse.min.js"></script>
+    <script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+:root {
+    --primary-color: #8884d8;
+    --primary-hover: #7a75c2;
+    --bg-color: #f4f4f9;
+    --card-bg: #ffffff;
+    --text-color: #333;
+    --light-text: #868e96;
+    --border-color: #e9ecef;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --font-family: 'Noto Sans KR', sans-serif;
+
+    --weight-easy: #a8d8b9;
+    --weight-medium: #82cae4;
+    --weight-hard: #ffc658;
+    --weight-expert: #ff8042;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+}
+
+.page-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo svg {
+    color: var(--primary-color);
+}
+
+.logo h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.filters-card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.filter-item {
+    flex: 1 1 150px;
+}
+
+.filter-item label {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    color: var(--light-text);
+    display: block;
+    font-weight: 500;
+}
+
+.filter-item select, .filter-item input {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--card-bg);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    font-size: 0.95em;
+}
+
+.filter-item select:focus, .filter-item input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(136, 132, 216, 0.2);
+}
+
+.search-container {
+    flex: 1 1 220px;
+}
+
+.search-wrapper {
+    display: flex;
+}
+
+.search-wrapper input {
+    border-right: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.search-wrapper button {
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--primary-color);
+    background-color: var(--primary-color);
+    color: white;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.search-wrapper button:hover { background-color: var(--primary-hover); }
+
+.table-wrapper { overflow-x: auto; background: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow); }
+.boardgame-table { width: 100%; min-width: 900px; border-collapse: collapse; }
+.boardgame-table th, .boardgame-table td { padding: 1rem; vertical-align: middle; border-bottom: 1px solid var(--border-color); }
+.boardgame-table tbody tr:last-child td { border-bottom: 0; }
+.boardgame-table th { background-color: #fcfcfd; font-weight: 500; color: var(--light-text); font-size: 0.8rem; text-transform: uppercase; text-align: center; }
+.boardgame-table th.name-header { text-align: left; }
+.boardgame-table tbody tr:hover { background-color: #f8f9fa; }
+
+th.rank-header, td.rank { width: 7%; }
+td.rank { font-weight: 700; font-size: 1.1em; text-align: center; }
+
+.thumbnail-cell { width: 8%; text-align: center; }
+.thumbnail { width: 50px; height: 50px; object-fit: contain; border-radius: 6px; }
+
+th.name-header, td.name { width: 45%; text-align: left; }
+td.name { font-weight: 500; white-space: normal; }
+td.name a { text-decoration: none; color: var(--text-color); font-weight: 500; transition: color 0.2s; }
+td.name a:hover { color: var(--primary-color); }
+td.long-name { font-size: 0.9em; }
+
+.year, .weight, .rating, .players { text-align: center; width: 10%; }
+
+.weight-badge { display: inline-block; padding: 0.3rem 0.75rem; border-radius: 15px; font-weight: 500; color: var(--text-color); font-size: 0.85em; }
+.weight-easy { background-color: var(--weight-easy); }
+.weight-medium { background-color: var(--weight-medium); }
+.weight-hard { background-color: var(--weight-hard); }
+.weight-expert { background-color: var(--weight-expert); color: white; }
+
+.pagination { display: flex; justify-content: center; align-items: center; margin-top: 2rem; }
+.pagination button { background-color: var(--card-bg); color: var(--primary-color); border: 1px solid var(--border-color); padding: 0.5rem 1rem; margin: 0 0.25rem; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+.pagination button:hover:not(:disabled) { background-color: var(--primary-color); color: var(--card-bg); }
+.pagination button.active { background-color: var(--primary-color); color: var(--card-bg); border-color: var(--primary-color); }
+.pagination button:disabled { color: var(--light-text); background-color: var(--bg-color); cursor: not-allowed; }
