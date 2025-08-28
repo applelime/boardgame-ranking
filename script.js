@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableBody = document.getElementById('table-body');
     const tableHeader = document.getElementById('table-header');
     const paginationContainer = document.getElementById('pagination');
+    const filterToggleButton = document.getElementById('filter-toggle-button');
+    const filtersContainer = document.getElementById('filters-container');
 
     let allGames = [];
     let filteredGames = [];
@@ -98,15 +100,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderTableHeader() {
-        tableHeader.innerHTML = `
+        const isMobile = window.innerWidth <= 768;
+        let headerHtml = `
             <th class="rank-header">#</th>
-            <th class="thumbnail-cell">이미지</th>
+            ${!isMobile ? '<th class="thumbnail-cell">이미지</th>' : ''}
             <th class="name-header">이름</th>
-            <th class="year">출시연도</th>
+            ${!isMobile ? '<th class="year">출시연도</th>' : ''}
             <th class="weight">난이도</th>
             <th class="rating">평점</th>
-            <th class="players">추천 인원</th>
+            ${!isMobile ? '<th class="players">추천 인원</th>' : ''}
         `;
+        tableHeader.innerHTML = headerHtml;
     }
 
     function renderTableBody() {
@@ -116,12 +120,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const pageGames = filteredGames.slice(startIndex, endIndex);
 
         if (pageGames.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 3rem;">표시할 게임이 없습니다.</td></tr>`;
+            const colspan = window.innerWidth <= 768 ? 4 : 7;
+            tableBody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center; padding: 3rem;">표시할 게임이 없습니다.</td></tr>`;
             return;
         }
 
         const rankType = rankTypeSelect.value;
         const isNewRank = rankType === 'new';
+        const isMobile = window.innerWidth <= 768;
 
         pageGames.forEach(game => {
             const row = document.createElement('tr');
@@ -152,19 +158,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
             row.innerHTML = `
                 <td class="rank">${rank}</td>
-                <td class="thumbnail-cell"><img src="${game.thumbnail}" alt="${game.name || 'N/A'}" class="thumbnail"></td>
+                ${!isMobile ? `<td class="thumbnail-cell"><img src="${game.thumbnail}" alt="${game.name || 'N/A'}" class="thumbnail"></td>` : ''}
                 <td class="${nameClass}">
                     <a href="https://boardgamegeek.com/boardgame/${game.id}" target="_blank">${game.name || '이름 없음'}</a>
                 </td>
-                <td class="year">${game.yearpublished}</td>
+                ${!isMobile ? `<td class="year">${game.yearpublished}</td>` : ''}
                 <td class="weight">
                     <span class="weight-badge ${weightClass}">${game.weight.toFixed(2)}</span>
                 </td>
                 <td class="rating">${rating}</td>
-                <td class="players">${playersText}</td>
+                ${!isMobile ? `<td class="players">${playersText}</td>` : ''}
             `;
             tableBody.appendChild(row);
         });
+    }
+
+    function getPagesToShow() {
+        const screenWidth = window.innerWidth;
+        if (screenWidth < 768) { // All mobile/small tablet sizes
+            return 5;
+        } else if (screenWidth < 992) { // Larger tablets
+            return 7;
+        } else { // Desktop
+            return 10;
+        }
     }
 
     function renderPagination() {
@@ -172,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalPages = Math.ceil(filteredGames.length / itemsPerPage);
         if (totalPages <= 1) return;
 
-        const maxPagesToShow = 10;
+        const maxPagesToShow = getPagesToShow();
         let startPage, endPage;
 
         if (totalPages <= maxPagesToShow) {
@@ -204,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return button;
         };
 
-        const prevPage = Math.max(1, currentPage - 10);
+        const prevPage = Math.max(1, currentPage - getPagesToShow());
         paginationContainer.appendChild(createButton('이전', prevPage, currentPage <= 1));
 
         for (let i = startPage; i <= endPage; i++) {
@@ -213,9 +230,24 @@ document.addEventListener('DOMContentLoaded', () => {
             paginationContainer.appendChild(button);
         }
 
-        const nextPage = Math.min(totalPages, currentPage + 10);
+        const nextPage = Math.min(totalPages, currentPage + getPagesToShow());
         paginationContainer.appendChild(createButton('다음', nextPage, currentPage === totalPages));
     }
+
+    function setupFilterToggle() {
+        const isDesktop = window.innerWidth > 992;
+        if (isDesktop) {
+            filtersContainer.classList.add('open');
+        } else {
+            filtersContainer.classList.remove('open');
+            filterToggleButton.classList.remove('open');
+        }
+    }
+
+    filterToggleButton.addEventListener('click', () => {
+        filtersContainer.classList.toggle('open');
+        filterToggleButton.classList.toggle('open');
+    });
 
     searchButton.addEventListener('click', applyFilters);
     searchInput.addEventListener('keydown', (e) => {
@@ -229,8 +261,14 @@ document.addEventListener('DOMContentLoaded', () => {
         sel.addEventListener('change', applyFilters);
     });
 
+    window.addEventListener('resize', () => {
+        setupFilterToggle();
+        render();
+    });
+
     populateDateFilter();
     if (csvFiles.length > 0) {
         loadData(csvFiles[0]);
     }
+    setupFilterToggle();
 });
