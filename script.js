@@ -103,15 +103,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderTableHeader() {
         const isMobile = window.innerWidth <= 768;
-        let headerHtml = `
-            <th class="rank-header">#</th>
-            ${!isMobile ? '<th class="thumbnail-cell">이미지</th>' : ''}
-            <th class="name-header">이름</th>
-            ${!isMobile ? '<th class="year">출시연도</th>' : ''}
-            <th class="weight">난이도</th>
-            <th class="rating">평점</th>
-            ${!isMobile ? '<th class="players">추천 인원</th>' : ''}
-        `;
+        let headerHtml;
+        if (isMobile) {
+            headerHtml = `
+                <th class="rank-header">#</th>
+                <th class="name-header">게임 정보</th>
+            `;
+        } else {
+            headerHtml = `
+                <th class="rank-header">#</th>
+                <th class="thumbnail-cell">이미지</th>
+                <th class="name-header">이름</th>
+                <th class="year">출시연도</th>
+                <th class="weight">난이도</th>
+                <th class="rating">평점</th>
+                <th class="players">추천 인원</th>
+            `;
+        }
         tableHeader.innerHTML = headerHtml;
     }
 
@@ -120,16 +128,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const pageGames = filteredGames.slice(startIndex, endIndex);
+        const isMobile = window.innerWidth <= 768;
 
         if (pageGames.length === 0) {
-            const colspan = window.innerWidth <= 768 ? 4 : 7;
+            const colspan = isMobile ? 2 : 7;
             tableBody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center; padding: 3rem;">표시할 게임이 없습니다.</td></tr>`;
             return;
         }
 
         const rankType = rankTypeSelect.value;
         const isNewRank = rankType === 'new';
-        const isMobile = window.innerWidth <= 768;
 
         pageGames.forEach(game => {
             const row = document.createElement('tr');
@@ -156,21 +164,56 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (weight < 4) weightClass = 'weight-hard';
             else weightClass = 'weight-expert';
 
-            const nameClass = game.name && game.name.length > 35 ? 'name long-name' : 'name';
-
-            row.innerHTML = `
-                <td class="rank">${rank}</td>
-                ${!isMobile ? `<td class="thumbnail-cell"><img src="${game.thumbnail}" alt="${game.name || 'N/A'}" class="thumbnail"></td>` : ''}
-                <td class="${nameClass}">
-                    <a href="https://boardgamegeek.com/boardgame/${game.id}" target="_blank">${game.name || '이름 없음'}</a>
-                </td>
-                ${!isMobile ? `<td class="year">${game.yearpublished}</td>` : ''}
-                <td class="weight">
-                    <span class="weight-badge ${weightClass}">${game.weight.toFixed(2)}</span>
-                </td>
-                <td class="rating">${rating}</td>
-                ${!isMobile ? `<td class="players">${playersText}</td>` : ''}
-            `;
+            if (isMobile) {
+                row.innerHTML = `
+                    <td colspan="2">
+                        <div class="mobile-game-card">
+                            <div class="main-row">
+                                <div class="rank">${rank}</div>
+                                <div class="thumbnail-cell">
+                                    <img src="${game.thumbnail}" alt="${game.name || 'N/A'}" class="thumbnail">
+                                </div>
+                                <div class="name">
+                                    <a href="https://boardgamegeek.com/boardgame/${game.id}" target="_blank">${game.name || '이름 없음'}</a>
+                                </div>
+                            </div>
+                            <div class="details-row">
+                                <div class="detail-item">
+                                    <span class="detail-label">출시연도</span>
+                                    <span class="detail-value">${game.yearpublished}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">난이도</span>
+                                    <span class="weight-badge ${weightClass}">${game.weight.toFixed(2)}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">평점</span>
+                                    <span class="detail-value">${rating}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">추천 인원</span>
+                                    <span class="detail-value">${playersText}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                `;
+            } else {
+                const nameClass = game.name && game.name.length > 35 ? 'name long-name' : 'name';
+                row.innerHTML = `
+                    <td class="rank">${rank}</td>
+                    <td class="thumbnail-cell"><img src="${game.thumbnail}" alt="${game.name || 'N/A'}" class="thumbnail"></td>
+                    <td class="${nameClass}">
+                        <a href="https://boardgamegeek.com/boardgame/${game.id}" target="_blank">${game.name || '이름 없음'}</a>
+                    </td>
+                    <td class="year">${game.yearpublished}</td>
+                    <td class="weight">
+                        <span class="weight-badge ${weightClass}">${game.weight.toFixed(2)}</span>
+                    </td>
+                    <td class="rating">${rating}</td>
+                    <td class="players">${playersText}</td>
+                `;
+            }
             tableBody.appendChild(row);
         });
     }
