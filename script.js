@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let filteredGames = [];
     let currentPage = 1;
     const itemsPerPage = 10;
+    let wasDesktop = window.innerWidth > 992;
+    let lastWindowWidth = window.innerWidth;
 
     const csvFiles = ['data/boardgames_re_ranked_2025-08-24.csv'];
 
@@ -175,12 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getPagesToShow() {
         const screenWidth = window.innerWidth;
-        if (screenWidth < 768) { // All mobile/small tablet sizes
-            return 5;
-        } else if (screenWidth < 992) { // Larger tablets
-            return 7;
-        } else { // Desktop
-            return 10;
+        if (screenWidth <= 480) {
+            return 5; // Small mobile (e.g., iPhone SE)
+        } else if (screenWidth <= 768) {
+            return 7; // Larger mobile / Small tablet portrait
+        } else { // > 768px
+            return 10; // iPad portrait and up
         }
     }
 
@@ -237,11 +239,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupFilterToggle() {
         const isDesktop = window.innerWidth > 992;
         if (isDesktop) {
+            // On desktop, always show filters and set button state to open (though hidden)
             filtersContainer.classList.add('open');
+            filterToggleButton.classList.add('open');
         } else {
-            filtersContainer.classList.remove('open');
-            filterToggleButton.classList.remove('open');
+            // On mobile, if we just switched from desktop, hide filters.
+            if (wasDesktop) {
+                filtersContainer.classList.remove('open');
+                filterToggleButton.classList.remove('open');
+            }
         }
+        wasDesktop = isDesktop;
     }
 
     filterToggleButton.addEventListener('click', () => {
@@ -262,7 +270,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.addEventListener('resize', () => {
-        setupFilterToggle();
+        if (window.innerWidth !== lastWindowWidth) {
+            setupFilterToggle();
+            lastWindowWidth = window.innerWidth;
+        }
         render();
     });
 
