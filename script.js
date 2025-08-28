@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const paginationContainer = document.getElementById('pagination');
     const filterToggleButton = document.getElementById('filter-toggle-button');
     const filtersContainer = document.getElementById('filters-container');
+    const activeFiltersContainer = document.getElementById('active-filters');
 
     let allGames = [];
     let filteredGames = [];
@@ -93,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filteredGames = tempGames;
         currentPage = 1;
         render();
+        renderActiveFilters();
     }
 
     function render() {
@@ -221,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getPagesToShow() {
         const screenWidth = window.innerWidth;
         if (screenWidth <= 480) {
-            return 5; // Small mobile (e.g., iPhone SE)
+            return 4; // Small mobile (e.g., iPhone SE)
         } else if (screenWidth <= 768) {
             return 7; // Larger mobile / Small tablet portrait
         } else { // > 768px
@@ -234,16 +236,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalPages = Math.ceil(filteredGames.length / itemsPerPage);
         if (totalPages <= 1) return;
 
+        const createButton = (text, page, isDisabled = false, classes = []) => {
+            const button = document.createElement('button');
+            button.innerHTML = text;
+            button.disabled = isDisabled;
+            if (classes.length > 0) button.classList.add(...classes);
+            button.addEventListener('click', () => {
+                if (currentPage === page) return;
+                currentPage = page;
+                render();
+                paginationContainer.focus();
+            });
+            return button;
+        };
+
+        const pageBlock = getPagesToShow();
+        paginationContainer.appendChild(createButton('이전', Math.max(1, currentPage - pageBlock), currentPage === 1));
+
         const maxPagesToShow = getPagesToShow();
         let startPage, endPage;
-
         if (totalPages <= maxPagesToShow) {
             startPage = 1;
             endPage = totalPages;
         } else {
-            let maxPagesBeforeCurrent = Math.floor(maxPagesToShow / 2);
-            let maxPagesAfterCurrent = Math.ceil(maxPagesToShow / 2) - 1;
-            if (currentPage <= maxPagesBeforeCurrent) {
+            const maxPagesBeforeCurrent = Math.ceil(maxPagesToShow / 2) - 1;
+            const maxPagesAfterCurrent = Math.floor(maxPagesToShow / 2);
+
+            if (currentPage <= maxPagesBeforeCurrent + 1) {
                 startPage = 1;
                 endPage = maxPagesToShow;
             } else if (currentPage + maxPagesAfterCurrent >= totalPages) {
@@ -255,28 +274,58 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        const createButton = (text, page, isDisabled = false) => {
-            const button = document.createElement('button');
-            button.textContent = text;
-            button.disabled = isDisabled;
-            button.addEventListener('click', () => {
-                currentPage = page;
-                render();
-            });
-            return button;
-        };
-
-        const prevPage = Math.max(1, currentPage - getPagesToShow());
-        paginationContainer.appendChild(createButton('이전', prevPage, currentPage <= 1));
-
         for (let i = startPage; i <= endPage; i++) {
-            const button = createButton(i, i);
-            if (i === currentPage) button.classList.add('active');
-            paginationContainer.appendChild(button);
+            const classes = i === currentPage ? ['active'] : [];
+            paginationContainer.appendChild(createButton(i, i, false, classes));
         }
 
-        const nextPage = Math.min(totalPages, currentPage + getPagesToShow());
-        paginationContainer.appendChild(createButton('다음', nextPage, currentPage === totalPages));
+        paginationContainer.appendChild(createButton('다음', Math.min(totalPages, currentPage + pageBlock), currentPage === totalPages));
+    }
+
+    function renderActiveFilters() {
+        activeFiltersContainer.innerHTML = '';
+        const isMobile = window.innerWidth <= 768;
+        const filters = [
+            { el: yearSelect, label: '출시 연도', default: 'all' },
+            { el: playersSelect, label: '게임 인원', default: 'all' },
+            { el: weightSelect, label: '게임 난이도', default: 'all' },
+            { el: rankTypeSelect, label: '순위 기준', default: 'original' },
+            { el: searchInput, label: '게임 이름', default: '' }
+        ];
+
+        let hasActiveFilters = false;
+        let colorIndex = 0;
+
+        filters.forEach(filter => {
+            if (filter.el.value !== filter.default) {
+                hasActiveFilters = true;
+                const chip = document.createElement('div');
+                chip.classList.add('filter-chip', `color-${(colorIndex % 5) + 1}`);
+                
+                const selectedOption = filter.el.querySelector(`option[value="${filter.el.value}"]`);
+                const valueText = filter.el.tagName === 'INPUT' ? filter.el.value : selectedOption.textContent;
+
+                let chipText;
+                if (isMobile && filter.el !== searchInput) {
+                    chipText = `<span>${valueText}</span>`;
+                } else {
+                    chipText = `<span>${filter.label}: ${valueText}</span>`;
+                }
+
+                chip.innerHTML = `
+                    ${chipText}
+                    <button class="remove-chip">&times;</button>
+                `;
+
+                chip.querySelector('.remove-chip').addEventListener('click', () => {
+                    filter.el.value = filter.default;
+                    applyFilters();
+                });
+                activeFiltersContainer.appendChild(chip);
+                colorIndex++;
+            }
+        });
+        activeFiltersContainer.style.display = hasActiveFilters ? 'flex' : 'none';
     }
 
     function setupFilterToggle() {
@@ -318,6 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lastWindowWidth = window.innerWidth;
         }
         render();
+        renderActiveFilters(); // Re-render chips on resize for mobile text changes
     });
 
     populateDateFilter();

@@ -274,6 +274,67 @@ td.long-name { font-size: 0.9em; }
     color: var(--primary-color);
 }
 
+/* --- Custom Select Box Styles --- */
+.select-wrapper {
+    position: relative;
+}
+.select-wrapper::after {
+    content: '\25BC';
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+.filter-item select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 2.5rem;
+}
+
+/* --- Active Filter Chip Styles --- */
+.active-filters-container {
+    display: none; /* Hidden by default */
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0 1.5rem 1.5rem;
+}
+
+.filter-chip {
+    display: flex;
+    align-items: center;
+    color: white;
+    border-radius: 15px;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.85em;
+    font-weight: 500;
+}
+.filter-chip.color-1 { background-color: var(--weight-easy); }
+.filter-chip.color-2 { background-color: var(--weight-medium); }
+.filter-chip.color-3 { background-color: var(--weight-hard); }
+.filter-chip.color-4 { background-color: var(--weight-expert); }
+.filter-chip.color-5 { background-color: var(--primary-color); }
+
+.filter-chip .remove-chip {
+    background: none;
+    border: none;
+    color: white;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    font-size: 1.2em;
+    line-height: 1;
+    padding: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+.filter-chip .remove-chip:hover {
+    opacity: 1;
+}
+
+
 /* 반응형 디자인 */
 @media (max-width: 992px) {
     .page-wrapper {
@@ -283,6 +344,7 @@ td.long-name { font-size: 0.9em; }
         padding: 0;
         background: transparent;
         box-shadow: none;
+        margin-bottom: 1rem;
     }
     .filter-toggle-button {
         display: flex;
@@ -297,7 +359,6 @@ td.long-name { font-size: 0.9em; }
         font-weight: 500;
         cursor: pointer;
         border-radius: 12px;
-        margin-bottom: 1rem;
         transition: all 0.2s;
     }
     .filter-toggle-button svg {
@@ -318,6 +379,9 @@ td.long-name { font-size: 0.9em; }
     .filters-container.open {
         display: block;
     }
+    .filters-container.open + .active-filters-container {
+        padding-top: 1.5rem;
+    }
     .filter-toggle-button.open svg {
         transform: rotate(180deg);
     }
@@ -330,6 +394,12 @@ td.long-name { font-size: 0.9em; }
     }
     .search-container {
         flex-basis: 100%;
+    }
+    .active-filters-container {
+        padding: 1rem 0 0 0;
+    }
+    .filters-card {
+        background-color: transparent;
     }
 }
 
@@ -440,7 +510,8 @@ td.long-name { font-size: 0.9em; }
     .filters-container {
         padding: 1rem;
     }
-    .boardgame-table th, .boardgame-table td {
+    .boardgame-table th,
+    .boardgame-table td {
         padding: 0.5rem;
         font-size: 0.9em;
     }
