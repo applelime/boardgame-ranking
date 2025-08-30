@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>보드게임 순위</title>
+    <title>모카 보드게임 랭킹</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri/dist/galmuri.css">
     <link rel="apple-touch-icon" sizes="180x180" href="public/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="public/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="public/favicon-16x16.png">
@@ -15,15 +16,14 @@
     <link rel="shortcut icon" href="public/favicon.ico">
 </head>
 <body>
+    <header class="page-header">
+        <div class="header-content">
+            <img src="public/favicon-32x32.png" alt="보드게임 랭킹 로고">
+            <h1>모카 보드게임 랭킹</h1>
+        </div>
+    </header>
     <div class="page-wrapper">
-        <header class="page-header">
-            <div class="logo">
-                <img src="public/favicon-32x32.png" alt="보드게임 순위 로고">
-                <h1>보드게임 순위</h1>
-            </div>
-        </header>
-
-        <main class="container">
+        <main>
             <div class="filters-card">
                 <button id="filter-toggle-button" class="filter-toggle-button">
                     <span>상세 검색</span>
