@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let wasDesktop = window.innerWidth > 992;
     let lastWindowWidth = window.innerWidth;
 
-    const csvFiles = ['data/boardgames_re_ranked_2025-08-24.csv'];
+    const csvFiles = ['data/boardgames_reranked_2025-09-01.csv'];
 
     function populateDateFilter() {
         csvFiles.forEach(file => {
@@ -49,7 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const searchTerm = searchInput.value.toLowerCase();
         if (searchTerm) {
-            tempGames = tempGames.filter(g => g.name && typeof g.name === 'string' && g.name.toLowerCase().includes(searchTerm));
+            tempGames = tempGames.filter(g => {
+                const nameMatch = g.name && typeof g.name === 'string' && g.name.toLowerCase().includes(searchTerm);
+                const koreanNameMatch = g.korean_name && typeof g.korean_name === 'string' && g.korean_name.toLowerCase().includes(searchTerm);
+                return nameMatch || koreanNameMatch;
+            });
         }
 
         const yearFilter = yearSelect.value;
@@ -144,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pageGames.forEach(game => {
             const row = document.createElement('tr');
             const rank = isNewRank ? game.new_rank : game.original_rank;
-            const rating = isNewRank ? game.bayes_new_rating.toFixed(3) : game.average.toFixed(3);
+            const rating = isNewRank ? game.bayes_new_rating.toFixed(3) : game.rating.toFixed(3);
 
             let playersText = 'N/A';
             const players = game.recommended_players;
@@ -166,6 +170,16 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (weight < 4) weightClass = 'weight-hard';
             else weightClass = 'weight-expert';
 
+            let nameHtml;
+            if (game.korean_name) {
+                nameHtml = `
+                    <div class="original-name">${game.name || '이름 없음'}</div>
+                    <div class="korean-name">${game.korean_name}</div>
+                `;
+            } else {
+                nameHtml = `<div class="original-name">${game.name || '이름 없음'}</div>`;
+            }
+
             if (isMobile) {
                 row.innerHTML = `
                     <td colspan="2">
@@ -176,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <img src="${game.thumbnail}" alt="${game.name || 'N/A'}" class="thumbnail">
                                 </div>
                                 <div class="name">
-                                    <a href="https://boardgamegeek.com/boardgame/${game.id}" target="_blank">${game.name || '이름 없음'}</a>
+                                    <a href="https://boardgamegeek.com/boardgame/${game.id}" target="_blank">${nameHtml}</a>
                                 </div>
                             </div>
                             <div class="details-row">
@@ -201,12 +215,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     </td>
                 `;
             } else {
-                const nameClass = game.name && game.name.length > 35 ? 'name long-name' : 'name';
                 row.innerHTML = `
                     <td class="rank">${rank}</td>
                     <td class="thumbnail-cell"><img src="${game.thumbnail}" alt="${game.name || 'N/A'}" class="thumbnail"></td>
-                    <td class="${nameClass}">
-                        <a href="https://boardgamegeek.com/boardgame/${game.id}" target="_blank">${game.name || '이름 없음'}</a>
+                    <td class="name">
+                        <a href="https://boardgamegeek.com/boardgame/${game.id}" target="_blank">${nameHtml}</a>
                     </td>
                     <td class="year">${game.yearpublished}</td>
                     <td class="weight">

@@ -182,7 +182,6 @@ th.name-header, td.name { width: 45%; text-align: left; }
 td.name { font-weight: 500; white-space: normal; }
 td.name a { text-decoration: none; color: var(--text-color); font-weight: 500; transition: color 0.2s; }
 td.name a:hover { color: var(--primary-color); }
-td.long-name { font-size: 0.9em; }
 
 .year, .weight, .rating, .players { text-align: center; width: 10%; }
 
@@ -558,4 +557,25 @@ td.long-name { font-size: 0.9em; }
     .pagination button {
         font-size: 0.9em;
     }
+}
+
+/* Name Styles */
+.name a {
+    text-decoration: none;
+    color: var(--text-color);
+    display: block; /* Ensures the anchor tag fills the container */
+}
+
+.name a:hover {
+    color: var(--primary-color);
+}
+
+.original-name {
+    font-weight: 500;
+}
+
+.korean-name {
+    font-size: 0.9em;
+    color: var(--light-text);
+    margin-top: 0.25rem;
 }
