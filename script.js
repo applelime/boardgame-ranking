@@ -20,7 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let wasDesktop = window.innerWidth > 992;
     let lastWindowWidth = window.innerWidth;
 
-    const csvFiles = ['data/boardgames_reranked_2025-09-01.csv'];
+    const csvFiles = [
+        'data/boardgames_reranked_2025-11-13.csv',
+        'data/boardgames_reranked_2025-09-01.csv' 
+    ];
 
     function populateDateFilter() {
         csvFiles.forEach(file => {

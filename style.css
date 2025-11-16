@@ -579,3 +579,14 @@ td.name a:hover { color: var(--primary-color); }
     color: var(--light-text);
     margin-top: 0.25rem;
 }
+
+/* BGG Footer */
+.page-footer-bgg {
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+.page-footer-bgg img {
+    height: 40px;
+    width: auto;
+}
